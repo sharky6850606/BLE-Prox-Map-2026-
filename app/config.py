@@ -1,0 +1,11 @@
+import os
+class Config:
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    FLESPI_TOKEN = os.getenv("FLESPI_TOKEN")
+    FLESPI_URL = os.getenv("FLESPI_URL")
+    RANGE_METERS = 3.0
+    TTL_SECONDS = 300
+    WORKER_INTERVAL = 60
+    RSSI_AT_1M = -59
+    PATH_LOSS_N = 2.2

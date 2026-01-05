@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>BLE Proximity Tracker</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+<h3>BLE Proximity Tracker</h3>
+<div id="map" style="height:600px"></div>
+<script>
+const map=L.map('map').setView([-13.84,-171.78],18);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+async function load(){
+ const d=await (await fetch('/api/live')).json();
+ d.forEach(r=>{
+  if(r.device.lat) L.marker([r.device.lat,r.device.lon]).addTo(map).bindPopup("FMC");
+  const angle=(r.beacon.id*60)%360;
+  const dx=r.distance*Math.cos(angle*Math.PI/180)/111111;
+  const dy=r.distance*Math.sin(angle*Math.PI/180)/111111;
+  L.circle([r.device.lat+dx,r.device.lon+dy],{radius:1}).addTo(map)
+   .bindPopup(r.beacon.name+" "+(r.in?"IN":"OUT"));
+ });
+}
+setInterval(load,5000); load();
+</script>
+</body>
+</html>
